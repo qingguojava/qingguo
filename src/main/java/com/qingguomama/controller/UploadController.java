@@ -41,7 +41,7 @@ public class UploadController {
             return "fail";
         }//返回值给微信小程序
 
-        //121312321321311
+        //abc
     }
 
 
