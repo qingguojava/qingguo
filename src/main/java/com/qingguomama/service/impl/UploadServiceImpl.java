@@ -1,8 +1,10 @@
 package com.qingguomama.service.impl;
 
+import com.avos.avoscloud.AVObject;
 import com.google.gson.Gson;
 import com.qingguomama.exception.UploadException;
 import com.qingguomama.service.UploadService;
+import com.qingguomama.util.LeanCloudUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -10,6 +12,7 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,8 +39,11 @@ public class UploadServiceImpl implements UploadService {
 
 
 
-    public String upload(MultipartFile image,String extName) throws UploadException {
+    public String upload(MultipartFile image,String currentUser) throws UploadException {
 ///构造一个带指定Zone对象的配置类
+        String originalFilename = image.getOriginalFilename();
+        // 如何取得文件上传的后缀名 zly.jpg
+        String extName  = StringUtils.substringAfterLast(originalFilename, ".");
         Configuration cfg = new Configuration(Zone.zone0());
 //...其他参数参考类注释
         UploadManager uploadManager = new UploadManager(cfg);
@@ -69,7 +75,27 @@ public class UploadServiceImpl implements UploadService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return key;
+
+        String URL = bucketHostName + "/" + key;
+        AVObject fileObject = new AVObject("File");
+        String mime_type = "image/"+extName;
+        LeanCloudUtil.start();
+        fileObject.put("mime_type",mime_type);
+
+        fileObject.put("name",key);
+        fileObject.put("url",URL);
+        fileObject.put("provider","qiniu");
+        fileObject.put("metaData",currentUser);
+        fileObject.put("bucket","YFzggloQ");
+        fileObject.put("createdAt",new Date());
+        fileObject.put("updatedAt",new Date());
+        try {
+            fileObject.save();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return URL;
     }
 
 
