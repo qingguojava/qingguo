@@ -3,7 +3,6 @@ package com.qingguomama.service.impl;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVSaveOption;
 import com.google.gson.Gson;
 import com.qingguomama.bean.Img;
 import com.qingguomama.exception.UploadException;
@@ -29,24 +28,20 @@ import java.util.UUID;
 @Service
 public class UploadServiceImpl implements UploadService {
 
-    //引入第一步的七牛配置
-
-
-
     public String upload(MultipartFile image/*,String currentUser*/) throws UploadException {
 ///构造一个带指定Zone对象的配置类
         String originalFilename = image.getOriginalFilename();
         // 如何取得文件上传的后缀名 zly.jpg
-        String extName  = StringUtils.substringAfterLast(originalFilename, ".");
+        String extName = StringUtils.substringAfterLast(originalFilename, ".");
         Configuration cfg = new Configuration(Zone.zone0());
 //...其他参数参考类注释
         UploadManager uploadManager = new UploadManager(cfg);
 //...生成上传凭证，然后准备上传
 
 //默认不指定key的情况下，以文件内容的hash值作为文件名
-        String key = UUID.randomUUID().toString()+ new Date().getMinutes()+"."+extName;
+        String key = UUID.randomUUID().toString() + new Date().getMinutes() + "." + extName;
         try {
-            byte[] uploadBytes =image.getBytes();
+            byte[] uploadBytes = image.getBytes();
             Auth auth = Auth.create(QiniuUtil.accesskey, QiniuUtil.secretKey);
             String upToken = auth.uploadToken(QiniuUtil.bucketName);
             try {
@@ -72,15 +67,15 @@ public class UploadServiceImpl implements UploadService {
 
         String URL = QiniuUtil.bucketHostName + "/" + key;
         AVObject fileObject = new AVObject("FileAtImg");
-        String mime_type = "image/"+extName;
+        String mime_type = "image/" + extName;
 
         LeanCloudUtil.start();
 
-        fileObject.put("mime_type",mime_type);
-        fileObject.put("name",key);
-        fileObject.put("url",URL);
+        fileObject.put("mime_type", mime_type);
+        fileObject.put("name", key);
+        fileObject.put("url", URL);
 //        fileObject.put("userId",userId);
-        fileObject.put("provider","qiniu");
+        fileObject.put("provider", "qiniu");
         try {
             fileObject.save();
         } catch (AVException e) {
@@ -88,57 +83,52 @@ public class UploadServiceImpl implements UploadService {
         }
 
 
+
         return URL;
     }
-   public Img getImg(String url){
-       Img img = new Img();
 
-       AVQuery<AVObject> avQuery = new AVQuery<>("FileAtImg");
-       AVObject avObject = null;
-       try {
-           avObject = avQuery.get(url);
-       } catch (AVException e) {
-           e.printStackTrace();
-       }
-       // avObject 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
+    public Img getImg(String url) {
+        LeanCloudUtil.start();
+        Img img = new Img();
+        AVObject avObject = LeanCloudUtil.getAvObject("FileAtImg", "url", url);
 
-      img.setMimeType(avObject.getString("mime_type"));
-       img.setName(avObject.getString("name"));
-       img.setThisUrl(avObject.getString("url"));
-       img.setProvider(avObject.getString("provider"));
+
+
+        img.setMimeType(avObject.getString("mime_type"));
+        img.setName(avObject.getString("name"));
+        img.setThisUrl(avObject.getString("url"));
+        img.setProvider(avObject.getString("provider"));
+        img.setObjectId(avObject.getObjectId());
 
 
         return img;
-   }
+    }
 
     @Override
-    public Img setImg(String url) {
-
+    public String updateImg(String url) {
         AVQuery query = new AVQuery("FileAtImg");
-        AVObject account = null;
+        Img img = getImg(url);
+        String objectId = LeanCloudUtil.getObjectId("FileAtImg", "url", url);
+        // 第一参数是 className,第二个参数是 objectId
+        AVObject todo = AVObject.createWithoutData("FileAtImg", objectId);
+        // 修改 content
+        todo.put("provider", "getInTest");
+        // 保存到云端
         try {
-            account = query.getFirst();
+            todo.save();
         } catch (AVException e) {
             e.printStackTrace();
         }
-
-        account.getUpdatedAt();
-
-        AVSaveOption option = new AVSaveOption();
-
-        option.setFetchWhenSave(true);
-        try {
-            account.save(option);
-            System.out.println("当前余额为：" + account.getInt("balance"));
-        } catch (AVException e){
-            if (e != null){
-                if (e.getCode() == 305){
-                    System.out.println("余额不足，操作失败！");
-                }
-            }
-        }
-        return null;
+        return url;
     }
+    public void deleteImg(String url) {
 
-
+        String objectId = LeanCloudUtil.getObjectId("FileAtImg", "url", url);;
+        // 执行 CQL 语句实现更新一个 Todo 对象
+        try {
+            AVQuery.doCloudQuery("delete from FileAtImg where objectId=?", objectId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

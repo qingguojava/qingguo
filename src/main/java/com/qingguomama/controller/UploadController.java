@@ -1,5 +1,6 @@
 package com.qingguomama.controller;
 
+import com.qingguomama.bean.Artical;
 import com.qingguomama.bean.Img;
 import com.qingguomama.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @CrossOrigin(origins = {"http://localhost:2182"})
@@ -34,7 +36,9 @@ public class UploadController {
         if (file != null) {
             String URL = uploadService.upload(file/*,currentUser*/);
             System.out.println(URL);
-            request.setAttribute("filePath", URL);
+
+            List<Artical> attention = FollowController.attention();
+            System.out.println(attention.toString());
             return URL;
         } else {
             return "fail";

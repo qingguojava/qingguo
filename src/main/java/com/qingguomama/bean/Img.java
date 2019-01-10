@@ -6,7 +6,7 @@ public class Img {
 //    String key = avObject.getString("name");
 //    String thisUrl = avObject.getString("url");
 //    String provider = avObject.getString("provider");
-
+    private String ObjectId;
     private String mimeType;
     private String name;
     private String thisUrl;
@@ -47,10 +47,11 @@ public class Img {
     public Img() {
     }
 
-    public Img(String mimeType, String name, String thisUrl, String provider) {
-        this.mimeType = mimeType;
-        this.name = name;
-        this.thisUrl = thisUrl;
-        this.provider = provider;
+    public String getObjectId() {
+        return ObjectId;
+    }
+
+    public void setObjectId(String objectId) {
+        ObjectId = objectId;
     }
 }

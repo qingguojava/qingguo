@@ -7,5 +7,5 @@ public interface UploadService {
 
     String upload(MultipartFile image/*,String currentUser*/);
     Img getImg(String url/*,String currentUser*/);
-    Img setImg(String url /*,String currentUser*/);
+    String updateImg(String url /*,String currentUser*/);
 }
