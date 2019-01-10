@@ -39,6 +39,12 @@ public class UploadController {
         } else {
             return "fail";
         }//返回值给微信小程序
+<<<<<<< HEAD
+=======
+
+        //abcaaa
+        //测试git提交
+>>>>>>> 94bd6558fbc345fa8f9c0974f2d54fa1b91cc941
     }
         @RequestMapping(value="/getLoader")
         @ResponseBody
