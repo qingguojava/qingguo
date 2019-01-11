@@ -69,7 +69,7 @@ public class UploadServiceImpl implements UploadService {
         AVObject fileObject = new AVObject("FileAtImg");
         String mime_type = "image/" + extName;
 
-        LeanCloudUtil.start();
+        LeanCloudUtil.Leancloudstart();
 
         fileObject.put("mime_type", mime_type);
         fileObject.put("name", key);
@@ -88,7 +88,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     public Img getImg(String url) {
-        LeanCloudUtil.start();
+        LeanCloudUtil.Leancloudstart();
         Img img = new Img();
         AVObject avObject = LeanCloudUtil.getAvObject("FileAtImg", "url", url);
 

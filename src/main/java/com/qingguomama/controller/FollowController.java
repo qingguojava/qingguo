@@ -23,8 +23,10 @@ public class FollowController {
         String fans="5c0f59059f54540067fc247f";
         double userlongitude =120.1875732421875;
         double userlatitude= 36.331553649902344;
-        List<Artical> articalList = followService.selectService(fans, userlongitude, userlatitude);
+        List<String> strings = followService.selectFollowId(fans, userlongitude, userlatitude);
 
+        List<Artical> articalList = followService.selectArtical(strings, userlongitude, userlatitude);
+        System.out.println(articalList.get(1).getContent());
 
         return articalList;
 

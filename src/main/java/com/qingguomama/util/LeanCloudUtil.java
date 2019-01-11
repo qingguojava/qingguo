@@ -9,7 +9,7 @@ public class LeanCloudUtil {//leanCloud信息
     public static String AppId = "YFzggloQWOnyQPwmXGnRHnGW-gzGzoHsz";
     public static  String AppKey = "5pJ2hDHl7FOTWElqoEADa6kR";
     public static String MasterKey = "bfQPDGLeIM8jFBakOJpPgoTA";
-    public static void start(){
+    public static void Leancloudstart(){
         AVOSCloud.useAVCloudCN();
         AVOSCloud.initialize(AppId,AppKey,MasterKey);
 
@@ -20,7 +20,7 @@ public class LeanCloudUtil {//leanCloud信息
 
     }
     public static AVObject getAvObject(String className,String columnName,Object object){
-        start();
+        Leancloudstart();
         AVQuery avQuery = getAVQuery(className, columnName, object);
         AVObject avObject=null;
         try {
@@ -33,14 +33,15 @@ public class LeanCloudUtil {//leanCloud信息
 
     }
     public static  AVQuery getAVQuery(String className,String columnName,Object object){
-        if(object!=null){
-            start();
+        Leancloudstart();
+        if(object==null){
+          //  start();
             AVQuery<AVObject> avQuery = new AVQuery<>(className);
 
             return avQuery;
 
         }else {
-            start();
+           // start();
             AVQuery<AVObject> avQuery = new AVQuery<>(className);
             AVQuery<AVObject> avQuery1 = null;
             AVObject avObject = null;

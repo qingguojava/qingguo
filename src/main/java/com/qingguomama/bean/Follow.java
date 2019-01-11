@@ -1,9 +1,11 @@
 package com.qingguomama.bean;
 
+import com.avos.avoscloud.AVGeoPoint;
+
 public class Follow {
     private String ObjectId;
-    private String fans;
-    private String followed;
+    private AVGeoPoint fans;
+    private AVGeoPoint followed;
 
     public String getObjectId() {
         return ObjectId;
@@ -13,28 +15,19 @@ public class Follow {
         ObjectId = objectId;
     }
 
-    public String getFans() {
+    public AVGeoPoint getFans() {
         return fans;
     }
 
-    public void setFans(String fans) {
+    public void setFans(AVGeoPoint fans) {
         this.fans = fans;
     }
 
-    public String getFollowed() {
+    public AVGeoPoint getFollowed() {
         return followed;
     }
 
-    public void setFollowed(String followed) {
+    public void setFollowed(AVGeoPoint followed) {
         this.followed = followed;
-    }
-
-    @Override
-    public String toString() {
-        return "Follow{" +
-                "ObjectId='" + ObjectId + '\'' +
-                ", fans='" + fans + '\'' +
-                ", followed='" + followed + '\'' +
-                '}';
     }
 }
