@@ -1,13 +1,13 @@
 package com.qingguomama.bean;
 
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class Artical {
 
     private String ObjectId;
     private String content;
-    private String[] pics;
+    private List pics;
     private Integer collectionNum;
     private Double longitude;
     private Integer clickrate;
@@ -46,11 +46,11 @@ public class Artical {
         this.content = content;
     }
 
-    public String[] getPics() {
+    public List getPics() {
         return pics;
     }
 
-    public void setPics(String[] pics) {
+    public void setPics(List pics) {
         this.pics = pics;
     }
 
@@ -149,7 +149,7 @@ public class Artical {
         return "Artical{" +
                 "ObjectId='" + ObjectId + '\'' +
                 ", content='" + content + '\'' +
-                ", pics=" + Arrays.toString(pics) +
+                ", pics=" + pics.toString() +
                 ", collectionNum=" + collectionNum +
                 ", longitude=" + longitude +
                 ", clickrate=" + clickrate +
