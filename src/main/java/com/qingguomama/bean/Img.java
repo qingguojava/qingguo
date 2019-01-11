@@ -12,7 +12,6 @@ public class Img {
     private String thisUrl;
     private String provider;
 
-    //private String 小老弟
 
     public String getMimeType() {
         return mimeType;
